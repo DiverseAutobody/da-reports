@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diverse Autobody — Panel Beater Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #D94F2A; --dark: #1A1A1A; --grey-900: #2C2C2C; --grey-700: #444444;
+    --grey-500: #888888; --grey-200: #E8E8E8; --grey-100: #F4F4F4; --grey-50: #FAFAFA;
+    --white: #FFFFFF; --green: #2E7D32; --green-bg: #E8F5E9; --amber: #B45309;
+    --amber-bg: #FEF3C7; --red-bg: #FEF2F2; --radius: 6px; --radius-lg: 12px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--grey-100); color: var(--dark); min-height: 100vh; }
+  .header { background: var(--dark); padding: 28px 24px 24px; position: relative; }
+  .header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--red); }
+  .header-logo { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: var(--red); text-transform: uppercase; margin-bottom: 8px; }
+  .header-title { font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .header-sub { font-size: 13px; color: var(--grey-500); }
+  .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+  .intro-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--grey-200); padding: 18px 20px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; color: var(--grey-700); }
+  .recipient-card { background: var(--white); border-radius: var(--radius-lg); border: 2px solid var(--red); padding: 20px; margin-bottom: 20px; }
+  .recipient-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--red); text-transform: uppercase; margin-bottom: 12px; }
+  .details-grid { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--grey-200); padding: 20px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .section-card { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--grey-200); margin-bottom: 16px; overflow: hidden; }
+  .section-header { background: var(--grey-900); padding: 13px 20px; display: flex; align-items: center; gap: 10px; }
+  .section-num { background: var(--red); color: var(--white); font-size: 11px; font-weight: 600; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; text-transform: uppercase; }
+  .section-body { padding: 20px; }
+  .section-hint { font-size: 13px; color: var(--grey-500); margin-bottom: 20px; line-height: 1.5; font-style: italic; }
+  .field-group { margin-bottom: 20px; }
+  .field-group:last-child { margin-bottom: 0; }
+  label { display: block; font-size: 14px; font-weight: 500; color: var(--grey-900); margin-bottom: 4px; line-height: 1.4; }
+  .field-hint { font-size: 12px; color: var(--grey-500); margin-bottom: 8px; font-style: italic; }
+  input[type="text"], input[type="email"], textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--dark); background: var(--grey-50); border: 1px solid var(--grey-200); border-radius: var(--radius); padding: 11px 14px; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus { border-color: var(--red); background: var(--white); box-shadow: 0 0 0 3px rgba(217,79,42,0.08); }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+  .scale-legend { display: flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--grey-200); border-radius: var(--radius); overflow: hidden; }
+  .scale-item { flex: 1; text-align: center; padding: 8px 4px; border-right: 1px solid var(--grey-200); }
+  .scale-item:last-child { border-right: none; }
+  .scale-item:nth-child(odd) { background: var(--grey-50); }
+  .scale-num { font-size: 15px; font-weight: 600; color: var(--red); display: block; }
+  .scale-label { font-size: 10px; color: var(--grey-500); display: block; margin-top: 2px; line-height: 1.3; }
+  .kpi-table { width: 100%; border-collapse: collapse; border: 1px solid var(--grey-200); border-radius: var(--radius); overflow: hidden; margin-bottom: 4px; }
+  .kpi-table thead th { background: var(--red); color: var(--white); font-size: 13px; font-weight: 600; padding: 11px 10px; text-align: left; }
+  .kpi-table thead th:not(:first-child) { text-align: center; width: 52px; }
+  .kpi-table tbody tr { border-bottom: 1px solid var(--grey-200); }
+  .kpi-table tbody tr:last-child { border-bottom: none; }
+  .kpi-table tbody tr:nth-child(even):not(.kpi-comment-row) { background: var(--grey-50); }
+  .kpi-table tbody td { padding: 13px 10px; vertical-align: middle; }
+  .kpi-table tbody td:first-child { min-width: 160px; }
+  .kpi-table tbody td:not(:first-child) { text-align: center; width: 52px; }
+  .kpi-name { font-size: 14px; font-weight: 600; color: var(--grey-900); display: block; }
+  .kpi-desc { font-size: 12px; color: var(--grey-500); font-style: italic; display: block; margin-top: 3px; line-height: 1.3; }
+  .kpi-radio { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border: 2px solid var(--grey-200); border-radius: 50%; cursor: pointer; transition: all 0.15s; display: inline-block; vertical-align: middle; position: relative; }
+  .kpi-radio:checked { border-color: var(--red); background: var(--red); }
+  .kpi-radio:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 7px; height: 7px; border-radius: 50%; background: var(--white); }
+  .kpi-radio:focus { outline: none; box-shadow: 0 0 0 3px rgba(217,79,42,0.15); }
+  .kpi-comment-row td { padding: 0 10px 14px !important; background: var(--white) !important; }
+  .kpi-comment-row textarea { min-height: 65px; font-size: 13px; }
+  .overall-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .overall-btn { padding: 12px 8px; border: 1.5px solid var(--grey-200); border-radius: var(--radius); background: var(--white); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; color: var(--grey-700); text-align: center; line-height: 1.3; }
+  .overall-btn.on-track { background: var(--green-bg); border-color: var(--green); color: var(--green); font-weight: 600; }
+  .overall-btn.needs-work { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); font-weight: 600; }
+  .overall-btn.not-meeting { background: var(--red-bg); border-color: var(--red); color: var(--red); font-weight: 600; }
+  .next-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
+  .next-btn { padding: 12px 16px; border: 1.5px solid var(--grey-200); border-radius: var(--radius); background: var(--white); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; color: var(--grey-700); text-align: left; line-height: 1.4; }
+  .next-btn.selected { background: var(--grey-900); border-color: var(--grey-900); color: var(--white); }
+  .divider { height: 1px; background: var(--grey-200); margin: 20px 0; }
+  .submit-section { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--grey-200); padding: 24px 20px; margin-top: 8px; }
+  .submit-note { font-size: 12px; color: var(--grey-500); margin-bottom: 16px; text-align: center; line-height: 1.5; }
+  .btn-submit { width: 100%; background: var(--red); color: var(--white); border: none; border-radius: var(--radius); padding: 14px 24px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-submit:hover { opacity: 0.9; }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .success-state { display: none; text-align: center; padding: 32px 20px; }
+  .success-icon { width: 52px; height: 52px; background: var(--green-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 24px; color: var(--green); }
+  .success-title { font-size: 18px; font-weight: 600; color: var(--grey-900); margin-bottom: 8px; }
+  .success-msg { font-size: 14px; color: var(--grey-500); line-height: 1.6; }
+  .error-msg { display: none; background: var(--red-bg); border: 1px solid #fca5a5; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; color: #991b1b; margin-top: 12px; text-align: center; }
+  .required-star { color: var(--red); margin-left: 2px; }
+  @media (max-width: 480px) { .details-grid, .overall-grid { grid-template-columns: 1fr; } .header { padding: 22px 16px 18px; } .header-title { font-size: 18px; } .kpi-radio { width: 18px; height: 18px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">Diverse Autobody</div>
+  <div class="header-title">Performance Feedback</div>
+  <div class="header-sub">Panel Beater — Formal feedback from manager</div>
+</div>
+
+<div class="container">
+
+  <div class="intro-card">
+    This is the written record of the feedback discussed in your review meeting. It covers how you are tracking against your targets, what was agreed going forward, and what happens next. Please read through this carefully.
+  </div>
+
+  <form id="feedbackForm">
+
+    <div class="recipient-card">
+      <div class="recipient-card-label">Send this feedback to</div>
+      <div class="field-group" style="margin-bottom:12px">
+        <label>Team member email<span class="required-star">*</span></label>
+        <div class="field-hint">Double check before submitting.</div>
+        <input type="email" name="recipient_email" required placeholder="e.g. owen@diverseautobody.com.au" id="recipientEmail">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Team member name<span class="required-star">*</span></label>
+        <input type="text" name="team_member_name" required placeholder="Full name" id="teamMemberName">
+      </div>
+    </div>
+
+    <div class="details-grid">
+      <div class="field-group" style="margin-bottom:0">
+        <label>Review period<span class="required-star">*</span></label>
+        <input type="text" name="review_period" required placeholder="e.g. April 2026">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Meeting date<span class="required-star">*</span></label>
+        <input type="text" name="meeting_date" required id="dateField">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Manager<span class="required-star">*</span></label>
+        <input type="text" name="manager_name" required placeholder="Manager name">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Next review date<span class="required-star">*</span></label>
+        <input type="text" name="next_review_date" required placeholder="e.g. 6 June 2026">
+      </div>
+    </div>
+
+    <!-- SECTION 1 — KPI RATINGS -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">KPI Ratings</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">Your manager's ratings of your performance across each key area this period. 1 = well below standard, 5 = exceptional.</p>
+
+        <div class="scale-legend">
+          <div class="scale-item"><span class="scale-num">1</span><span class="scale-label">Well below standard</span></div>
+          <div class="scale-item"><span class="scale-num">2</span><span class="scale-label">Below standard</span></div>
+          <div class="scale-item"><span class="scale-num">3</span><span class="scale-label">Meeting standard</span></div>
+          <div class="scale-item"><span class="scale-num">4</span><span class="scale-label">Above standard</span></div>
+          <div class="scale-item"><span class="scale-num">5</span><span class="scale-label">Exceptional</span></div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="kpi-table">
+            <thead>
+              <tr><th>KPI</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="kpi-name">Quality of repairs</span><span class="kpi-desc">Are panels consistently leaving the bay at the standard required for paint?</span></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_quality" value="1" required></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_quality" value="2"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_quality" value="3"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_quality" value="4"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_quality" value="5"></td>
+              </tr>
+              <tr class="kpi-comment-row">
+                <td colspan="6"><textarea name="kpi_c_quality" placeholder="Specific feedback on repair quality this period..."></textarea></td>
+              </tr>
+              <tr>
+                <td><span class="kpi-name">Speed and output</span><span class="kpi-desc">Is the team member completing jobs at the pace the shop needs?</span></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_speed" value="1" required></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_speed" value="2"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_speed" value="3"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_speed" value="4"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_speed" value="5"></td>
+              </tr>
+              <tr class="kpi-comment-row">
+                <td colspan="6"><textarea name="kpi_c_speed" placeholder="Specific feedback on speed and output this period..."></textarea></td>
+              </tr>
+              <tr>
+                <td><span class="kpi-name">Teamwork</span><span class="kpi-desc">Contributing well on two man jobs and supporting the team around them</span></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_teamwork" value="1" required></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_teamwork" value="2"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_teamwork" value="3"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_teamwork" value="4"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_teamwork" value="5"></td>
+              </tr>
+              <tr class="kpi-comment-row">
+                <td colspan="6"><textarea name="kpi_c_teamwork" placeholder="Specific feedback on teamwork and two man jobs..."></textarea></td>
+              </tr>
+              <tr>
+                <td><span class="kpi-name">Communication</span><span class="kpi-desc">Keeping the manager informed and speaking up when something is not right</span></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_comms" value="1" required></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_comms" value="2"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_comms" value="3"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_comms" value="4"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_comms" value="5"></td>
+              </tr>
+              <tr class="kpi-comment-row">
+                <td colspan="6"><textarea name="kpi_c_comms" placeholder="Specific feedback on communication this period..."></textarea></td>
+              </tr>
+              <tr>
+                <td><span class="kpi-name">Initiative</span><span class="kpi-desc">Identifying what needs doing next and getting on with it without waiting to be told</span></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_initiative" value="1" required></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_initiative" value="2"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_initiative" value="3"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_initiative" value="4"></td>
+                <td><input class="kpi-radio" type="radio" name="kpi_r_initiative" value="5"></td>
+              </tr>
+              <tr class="kpi-comment-row">
+                <td colspan="6"><textarea name="kpi_c_initiative" placeholder="Specific feedback on initiative and self-direction..."></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 — WRITTEN FEEDBACK -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Written Feedback</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">Direct written feedback based on what was observed and discussed in the meeting. Be specific and factual.</p>
+
+        <div class="field-group">
+          <label>What you are doing well<span class="required-star">*</span></label>
+          <div class="field-hint">Name specific repairs, behaviours or moments from this period.</div>
+          <textarea name="feedback_strengths" required placeholder="e.g. Panel alignment and metalwork on structural repairs has been consistently accurate. You work well on two man jobs and the painters rarely have to wait on you..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Where you need to improve<span class="required-star">*</span></label>
+          <div class="field-hint">Specific gaps based on what was observed this period.</div>
+          <textarea name="feedback_gaps" required placeholder="e.g. Job turnaround is slower than the shop needs. There are periods of downtime between jobs that are not being used productively..."></textarea>
+        </div>
+
+        <div class="field-group" style="margin-bottom:0">
+          <label>What we need from you going forward<span class="required-star">*</span></label>
+          <div class="field-hint">Clear and direct — what does the business need to see?</div>
+          <textarea name="feedback_expectations" required placeholder="e.g. Panels leaving your bay should need zero rework before going to paint. When a job is done, identify the next one and start without being asked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 — AGREED GOALS -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">Agreed Goals</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">These are the goals agreed on in the meeting. These are what you will be measured against at your next review.</p>
+
+        <div class="field-group">
+          <label>Goal 1<span class="required-star">*</span></label>
+          <input type="text" name="goal_1" required placeholder="e.g. Zero rework jobs this period — panels leave the bay ready for paint every time">
+        </div>
+
+        <div class="field-group">
+          <label>Goal 2<span class="required-star">*</span></label>
+          <input type="text" name="goal_2" required placeholder="e.g. When a job is complete, start the next one without waiting to be directed">
+        </div>
+
+        <div class="field-group">
+          <label>Goal 3</label>
+          <input type="text" name="goal_3" placeholder="e.g. Flag any parts or process issues to the manager the same day they arise">
+        </div>
+
+        <div class="field-group" style="margin-bottom:0">
+          <label>What the business agreed to provide or change</label>
+          <div class="field-hint">Any support or changes committed to on our side.</div>
+          <textarea name="business_commitments" placeholder="e.g. Manager will ensure jobs and parts are ready before the team member arrives at the bay..." style="min-height:70px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 — OUTCOME -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Outcome</div>
+      </div>
+      <div class="section-body">
+
+        <div class="field-group">
+          <label>Overall performance assessment<span class="required-star">*</span></label>
+          <div class="overall-grid">
+            <button type="button" class="overall-btn on-track" data-field="outcome" data-val="On track — standard being met">On track</button>
+            <button type="button" class="overall-btn needs-work" data-field="outcome" data-val="Needs improvement — standard partially met">Needs improvement</button>
+            <button type="button" class="overall-btn not-meeting" data-field="outcome" data-val="Not meeting standard — formal action required">Not meeting standard</button>
+          </div>
+          <input type="hidden" name="outcome" required>
+        </div>
+
+        <div class="field-group">
+          <label>What happens next<span class="required-star">*</span></label>
+          <div class="next-grid">
+            <button type="button" class="next-btn" data-field="next_step" data-val="Weekly review — check in every week with manager against targets">Weekly review — check in every week with manager against targets</button>
+            <button type="button" class="next-btn" data-field="next_step" data-val="Monthly review — reassess in 30 days against the same targets">Monthly review — reassess in 30 days against the same targets</button>
+            <button type="button" class="next-btn" data-field="next_step" data-val="Quarterly review — performance on track, review next quarter">Quarterly review — performance on track, review next quarter</button>
+            <button type="button" class="next-btn" data-field="next_step" data-val="Formal written warning issued — further failure to meet standard may result in termination">Formal written warning issued — further failure to meet standard may result in termination</button>
+          </div>
+          <input type="hidden" name="next_step" required>
+        </div>
+
+        <div class="field-group" style="margin-bottom:0">
+          <label>Additional notes</label>
+          <textarea name="additional_notes" placeholder="Any other context or observations that should be on the record..." style="min-height:70px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-section" id="submitSection">
+      <p class="submit-note">This feedback will be sent to <strong id="recipientDisplay">the team member</strong> and recorded as a permanent record.</p>
+      <button type="submit" class="btn-submit" id="submitBtn">Send feedback</button>
+      <div class="error-msg" id="errorMsg">Something went wrong. Please try again.</div>
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="success-icon">&#10003;</div>
+      <div class="success-title">Feedback sent</div>
+      <div class="success-msg" id="successMsg">The feedback has been sent and recorded.</div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  const d = new Date();
+  document.getElementById('dateField').value = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+
+  document.getElementById('recipientEmail').addEventListener('input', function() {
+    document.getElementById('recipientDisplay').textContent = this.value || 'the team member';
+  });
+
+  document.querySelectorAll('.overall-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldName = btn.dataset.field;
+      document.querySelectorAll('.overall-btn[data-field="' + fieldName + '"]').forEach(b => {
+        b.style.opacity = '0.45'; b.style.fontWeight = '500';
+      });
+      btn.style.opacity = '1'; btn.style.fontWeight = '700';
+      document.querySelector('input[name="' + fieldName + '"]').value = btn.dataset.val;
+    });
+  });
+
+  document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldName = btn.dataset.field;
+      document.querySelectorAll('.next-btn[data-field="' + fieldName + '"]').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.querySelector('input[name="' + fieldName + '"]').value = btn.dataset.val;
+    });
+  });
+
+  const ACCESS_KEY = '9322da94-7969-4a31-a433-ee5f25592c06';
+
+  document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.style.display = 'none';
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending...';
+
+    const fd = new FormData(this);
+    const recipientEmail = document.getElementById('recipientEmail').value;
+    const teamMemberName = document.getElementById('teamMemberName').value;
+
+    fd.append('access_key', ACCESS_KEY);
+    fd.append('subject', 'Diverse Autobody — Panel Beater Performance Feedback: ' + teamMemberName);
+    fd.append('to', recipientEmail);
+    fd.append('bcc', 'dean@diverseautobody.com.au');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('submitSection').style.display = 'none';
+        document.getElementById('successState').style.display = 'block';
+        document.getElementById('successMsg').textContent =
+          'The feedback has been sent to ' + teamMemberName + ' at ' + recipientEmail + ' and recorded.';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      } else { throw new Error(data.message); }
+    } catch(err) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+      errMsg.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>
