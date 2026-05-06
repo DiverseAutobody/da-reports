@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diverse Autobody — Painter Self Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #D94F2A;
+    --dark: #1A1A1A;
+    --grey-900: #2C2C2C;
+    --grey-700: #444444;
+    --grey-500: #888888;
+    --grey-200: #E8E8E8;
+    --grey-100: #F4F4F4;
+    --grey-50: #FAFAFA;
+    --white: #FFFFFF;
+    --radius: 6px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--grey-100);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .header {
+    background: var(--dark);
+    padding: 28px 24px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--red);
+  }
+
+  .header-logo {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--grey-500);
+    font-weight: 400;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  .intro-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--grey-200);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--grey-700);
+  }
+
+  .details-grid {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--grey-200);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .section-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--grey-200);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    background: var(--grey-900);
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-num {
+    background: var(--red);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .section-body {
+    padding: 20px;
+  }
+
+  .section-hint {
+    font-size: 13px;
+    color: var(--grey-500);
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .field-group {
+    margin-bottom: 22px;
+  }
+
+  .field-group:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--grey-900);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--grey-500);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--dark);
+    background: var(--grey-50);
+    border: 1px solid var(--grey-200);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--red);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(217, 79, 42, 0.08);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+
+  .rating-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+  }
+
+  .rating-table thead th {
+    background: var(--red);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 8px;
+    text-align: left;
+  }
+
+  .rating-table thead th:not(:first-child) {
+    text-align: center;
+    width: 48px;
+  }
+
+  .rating-table tbody tr:nth-child(even) {
+    background: var(--grey-50);
+  }
+
+  .rating-table tbody td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--grey-200);
+    vertical-align: middle;
+  }
+
+  .rating-table tbody td:first-child {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--grey-900);
+    min-width: 140px;
+  }
+
+  .rating-table tbody td .kpi-desc {
+    font-size: 11px;
+    color: var(--grey-500);
+    font-weight: 400;
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .rating-table tbody td:not(:first-child) {
+    text-align: center;
+    width: 48px;
+  }
+
+  .rating-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--grey-200);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .rating-radio:checked {
+    border-color: var(--red);
+    background: var(--red);
+  }
+
+  .rating-radio:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--white);
+  }
+
+  .rating-radio:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 79, 42, 0.15);
+  }
+
+  .scale-legend {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border: 1px solid var(--grey-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .scale-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    border-right: 1px solid var(--grey-200);
+  }
+
+  .scale-item:last-child { border-right: none; }
+  .scale-item:nth-child(odd) { background: var(--grey-50); }
+
+  .scale-num {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--red);
+    display: block;
+  }
+
+  .scale-label {
+    font-size: 10px;
+    color: var(--grey-500);
+    display: block;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--grey-200);
+    margin: 20px 0;
+  }
+
+  .submit-section {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--grey-200);
+    padding: 24px 20px;
+    margin-top: 8px;
+  }
+
+  .submit-note {
+    font-size: 12px;
+    color: var(--grey-500);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-submit:hover { opacity: 0.9; }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 32px 20px;
+  }
+
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    background: #e8f5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 22px;
+  }
+
+  .success-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--grey-900);
+    margin-bottom: 8px;
+  }
+
+  .success-msg {
+    font-size: 14px;
+    color: var(--grey-500);
+    line-height: 1.5;
+  }
+
+  .error-msg {
+    display: none;
+    background: #fff3f3;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #991b1b;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .required-star { color: var(--red); margin-left: 2px; }
+
+  @media (max-width: 480px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .header { padding: 22px 16px 18px; }
+    .header-title { font-size: 18px; }
+    .rating-table thead th { font-size: 11px; padding: 8px 4px; }
+    .rating-table tbody td { padding: 10px 4px; }
+    .rating-table tbody td:first-child { font-size: 12px; min-width: 110px; }
+    .rating-radio { width: 18px; height: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">Diverse Autobody</div>
+  <div class="header-title">Performance Review</div>
+  <div class="header-sub">Painter — Team Member Self Assessment</div>
+</div>
+
+<div class="container">
+
+  <div class="intro-card">
+    Please complete this form honestly before your review meeting. There are no right or wrong answers. This is your chance to reflect on your own performance and share your perspective before we sit down together. Your answers go directly to Jason.
+  </div>
+
+  <form id="assessmentForm">
+
+    <!-- DETAILS -->
+    <div class="details-grid">
+      <div class="field-group" style="margin-bottom:0">
+        <label>Your name<span class="required-star">*</span></label>
+        <input type="text" name="name" required placeholder="Full name">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Review period<span class="required-star">*</span></label>
+        <input type="text" name="review_period" required placeholder="e.g. Q1 2026">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Your email</label>
+        <input type="email" name="reply_email" placeholder="Your email (optional)">
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label>Date<span class="required-star">*</span></label>
+        <input type="text" name="date" required id="dateField">
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Your Work</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">Answer as honestly as you can. The more specific you are, the better the conversation will be.</p>
+
+        <div class="field-group">
+          <label>What are you most proud of from this review period?<span class="required-star">*</span></label>
+          <textarea name="q1" required placeholder="Think about specific jobs, moments or improvements you made..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>How would you describe the quality of your paint work coming out of the booth right now?<span class="required-star">*</span></label>
+          <textarea name="q2" required placeholder="Be honest — what is working well and what is not?"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>How do you feel about your prep work before panels go in the booth?<span class="required-star">*</span></label>
+          <textarea name="q3" required placeholder="Are you confident it consistently meets the standard?"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Where do you feel you have fallen short this period?<span class="required-star">*</span></label>
+          <textarea name="q4" required placeholder="No judgment. Just be honest with yourself."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Is there anything getting in the way of you doing your best work?</label>
+          <div class="field-hint">Equipment, process, support, workload — anything at all.</div>
+          <textarea name="q5" placeholder="Share anything that is holding you back..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Rate Yourself</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">Mark the number that best reflects where you honestly are right now. Jason will review your specific targets with you before the meeting.</p>
+
+        <div class="scale-legend">
+          <div class="scale-item"><span class="scale-num">1</span><span class="scale-label">Well below standard</span></div>
+          <div class="scale-item"><span class="scale-num">2</span><span class="scale-label">Below standard</span></div>
+          <div class="scale-item"><span class="scale-num">3</span><span class="scale-label">Meeting standard</span></div>
+          <div class="scale-item"><span class="scale-num">4</span><span class="scale-label">Above standard</span></div>
+          <div class="scale-item"><span class="scale-num">5</span><span class="scale-label">Exceptional</span></div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="rating-table">
+            <thead>
+              <tr>
+                <th>KPI</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Boothloads per day<span class="kpi-desc">Are you consistently hitting your daily booth target?</span></td>
+                <td><input class="rating-radio" type="radio" name="r_boothloads" value="1" required></td>
+                <td><input class="rating-radio" type="radio" name="r_boothloads" value="2"></td>
+                <td><input class="rating-radio" type="radio" name="r_boothloads" value="3"></td>
+                <td><input class="rating-radio" type="radio" name="r_boothloads" value="4"></td>
+                <td><input class="rating-radio" type="radio" name="r_boothloads" value="5"></td>
+              </tr>
+              <tr>
+                <td>Paint quality<span class="kpi-desc">How consistently is your paint coming out right first time?</span></td>
+                <td><input class="rating-radio" type="radio" name="r_quality" value="1" required></td>
+                <td><input class="rating-radio" type="radio" name="r_quality" value="2"></td>
+                <td><input class="rating-radio" type="radio" name="r_quality" value="3"></td>
+                <td><input class="rating-radio" type="radio" name="r_quality" value="4"></td>
+                <td><input class="rating-radio" type="radio" name="r_quality" value="5"></td>
+              </tr>
+              <tr>
+                <td>Prep quality<span class="kpi-desc">Is your prep consistently at the standard before panels go in the booth?</span></td>
+                <td><input class="rating-radio" type="radio" name="r_prep" value="1" required></td>
+                <td><input class="rating-radio" type="radio" name="r_prep" value="2"></td>
+                <td><input class="rating-radio" type="radio" name="r_prep" value="3"></td>
+                <td><input class="rating-radio" type="radio" name="r_prep" value="4"></td>
+                <td><input class="rating-radio" type="radio" name="r_prep" value="5"></td>
+              </tr>
+              <tr>
+                <td>Rework rate<span class="kpi-desc">How often are jobs coming back to you for correction?</span></td>
+                <td><input class="rating-radio" type="radio" name="r_rework" value="1" required></td>
+                <td><input class="rating-radio" type="radio" name="r_rework" value="2"></td>
+                <td><input class="rating-radio" type="radio" name="r_rework" value="3"></td>
+                <td><input class="rating-radio" type="radio" name="r_rework" value="4"></td>
+                <td><input class="rating-radio" type="radio" name="r_rework" value="5"></td>
+              </tr>
+              <tr>
+                <td>Speed and efficiency<span class="kpi-desc">Are you working at the pace the shop needs?</span></td>
+                <td><input class="rating-radio" type="radio" name="r_speed" value="1" required></td>
+                <td><input class="rating-radio" type="radio" name="r_speed" value="2"></td>
+                <td><input class="rating-radio" type="radio" name="r_speed" value="3"></td>
+                <td><input class="rating-radio" type="radio" name="r_speed" value="4"></td>
+                <td><input class="rating-radio" type="radio" name="r_speed" value="5"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">The Shop and the Team</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">This is about the environment around you, not just your individual performance.</p>
+
+        <div class="field-group">
+          <label>Is there anything in the shop, the process or the equipment that is slowing you down or making your job harder?</label>
+          <textarea name="q8" placeholder="Be direct — we want to know about it..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>How are you finding working with the team around you? What is working well and what is not?</label>
+          <textarea name="q9" placeholder="Share your honest experience..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Is there anything you think we are doing as a business that we should change or do differently?</label>
+          <textarea name="q10" placeholder="Any feedback is welcome..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Looking Ahead</div>
+      </div>
+      <div class="section-body">
+        <p class="section-hint">This section is about your growth and what you want from your time at Diverse.</p>
+
+        <div class="field-group">
+          <label>What is the one thing you most want to improve next quarter?<span class="required-star">*</span></label>
+          <div class="field-hint">Be specific about what you will actually do differently.</div>
+          <textarea name="q11" required placeholder="Not just better quality — what exactly will change?"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Is there any training, support or equipment that would help you perform better?</label>
+          <textarea name="q12" placeholder="Anything that would genuinely make a difference..." style="min-height: 80px;"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Where do you want to be in 12 months? What does growth look like for you at Diverse Autobody?</label>
+          <textarea name="q13" placeholder="What does success look like for you personally?"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Is there anything you want to raise with Jason or Dean that you have not had the chance to yet?</label>
+          <textarea name="q14" placeholder="Anything at all — this is your chance..." style="min-height: 80px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section" id="submitSection">
+      <p class="submit-note">Your answers will be sent directly to Jason and Dean when you tap submit.</p>
+      <button type="submit" class="btn-submit" id="submitBtn">Submit my self assessment</button>
+      <div class="error-msg" id="errorMsg">Something went wrong. Please try again or contact Jason directly.</div>
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="success-icon">&#10003;</div>
+      <div class="success-title">Assessment submitted</div>
+      <div class="success-msg">Your answers have been sent to Jason and Dean. They will review everything before your meeting. Thanks for taking the time to be honest.</div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  // Set today's date
+  const d = new Date();
+  const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+  const dateField = document.getElementById('dateField');
+  if (dateField) dateField.value = dateStr;
+  const ackDate = document.getElementById('ackDate');
+  if (ackDate) ackDate.value = dateStr;
+
+  // Live recipient display (feedback form)
+  const recipientEmail = document.getElementById('recipientEmail');
+  if (recipientEmail) {
+    recipientEmail.addEventListener('input', function() {
+      const display = document.getElementById('recipientDisplay');
+      if (display) display.textContent = this.value || 'the team member';
+    });
+  }
+
+  // Rating buttons (manager assessment)
+  document.querySelectorAll('.rating-row').forEach(row => {
+    row.querySelectorAll('.rating-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const fieldName = row.dataset.field;
+        row.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        const hidden = document.querySelector('input[name="' + fieldName + '"]');
+        if (hidden) hidden.value = btn.dataset.val;
+      });
+    });
+  });
+
+  // Agree buttons (manager assessment)
+  document.querySelectorAll('.agree-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldName = btn.dataset.field;
+      document.querySelectorAll('.agree-btn[data-field="' + fieldName + '"]').forEach(b => {
+        b.style.opacity = '0.6'; b.style.fontWeight = '500';
+      });
+      btn.style.opacity = '1'; btn.style.fontWeight = '700';
+      const hidden = document.querySelector('input[name="' + fieldName + '"]');
+      if (hidden) hidden.value = btn.dataset.val;
+    });
+  });
+
+  // Outcome buttons
+  document.querySelectorAll('.outcome-btn, .overall-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldName = btn.dataset.field;
+      document.querySelectorAll('[data-field="' + fieldName + '"]').forEach(b => {
+        b.style.opacity = '0.45'; b.style.fontWeight = '500';
+      });
+      btn.style.opacity = '1'; btn.style.fontWeight = '700';
+      const hidden = document.querySelector('input[name="' + fieldName + '"]');
+      if (hidden) hidden.value = btn.dataset.val;
+    });
+  });
+
+  // Next step buttons
+  document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fieldName = btn.dataset.field;
+      document.querySelectorAll('.next-btn[data-field="' + fieldName + '"]').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const hidden = document.querySelector('input[name="' + fieldName + '"]');
+      if (hidden) hidden.value = btn.dataset.val;
+    });
+  });
+
+  // Web3Forms submission
+  const ACCESS_KEY = '9322da94-7969-4a31-a433-ee5f25592c06';
+
+  const theForm = document.getElementById('assessmentForm');
+  if (theForm) {
+    theForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const errMsg = document.getElementById('errorMsg');
+      if (errMsg) errMsg.style.display = 'none';
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Sending...';
+
+      const fd = new FormData(this);
+      fd.append('access_key', ACCESS_KEY);
+      fd.append('subject', 'Diverse Autobody — Painter Self Assessment');
+
+      // For feedback form — use typed recipient email as primary
+      const recipInput = document.getElementById('recipientEmail');
+      if (recipInput && recipInput.value) {
+        fd.set('to', recipInput.value);
+        fd.append('cc', 'dean@diverseautobody.com.au');
+        fd.append('bcc', 'jason@diverseautobody.com.au');
+      } else {
+        fd.append('to', 'jason@diverseautobody.com.au');
+        fd.append('cc', 'dean@diverseautobody.com.au');
+      }
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: fd
+        });
+        const data = await res.json();
+        if (data.success) {
+          const submitSection = document.getElementById('submitSection');
+          const successState = document.getElementById('successState');
+          if (submitSection) submitSection.style.display = 'none';
+          if (successState) successState.style.display = 'block';
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        } else {
+          throw new Error(data.message);
+        }
+      } catch(err) {
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = originalText;
+        if (errMsg) errMsg.style.display = 'block';
+      }
+    });
+  }
+</script>
+</body>
+</html>
