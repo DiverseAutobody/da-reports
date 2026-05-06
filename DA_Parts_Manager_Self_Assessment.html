@@ -82,7 +82,7 @@
 <div class="container">
 
   <div class="intro-card">
-    This is a chance for you to share how you think things are going before we sit down together. There are no trick questions and no right or wrong answers. Just be honest — that is what makes the conversation useful. Your answers go to Jason before the meeting.
+    This is a chance for you to share how you think things are going before we sit down together. There are no trick questions and no right or wrong answers. Just be honest — that is what makes the conversation useful. Your answers go to your manager before the meeting.
   </div>
 
   <form id="assessmentForm">
@@ -98,7 +98,7 @@
       </div>
       <div class="field-group" style="margin-bottom:0">
         <label>Reviewing manager</label>
-        <input type="text" name="manager_name" value="Jason" readonly style="background:var(--grey-100); color:var(--grey-500);">
+        <input type="text" name="manager_name" placeholder="Manager name">
       </div>
       <div class="field-group" style="margin-bottom:0">
         <label>Date<span class="required-star">*</span></label>
@@ -184,7 +184,7 @@
                 <td><input class="kpi-radio" type="radio" name="r_tasks" value="5"></td>
               </tr>
               <tr>
-                <td><span class="kpi-name">Following through without reminders</span><span class="kpi-desc">Do tasks get done without Jason or Dean having to follow up?</span></td>
+                <td><span class="kpi-name">Following through without reminders</span><span class="kpi-desc">Do tasks get done without your manager having to follow up?</span></td>
                 <td><input class="kpi-radio" type="radio" name="r_reminders" value="1" required></td>
                 <td><input class="kpi-radio" type="radio" name="r_reminders" value="2"></td>
                 <td><input class="kpi-radio" type="radio" name="r_reminders" value="3"></td>
@@ -266,7 +266,7 @@
         </div>
 
         <div class="field-group">
-          <label>Is there anything you want to raise with Jason or Dean that you have not had the chance to yet?</label>
+          <label>Is there anything you want to raise with your manager that you have not had the chance to yet?</label>
           <textarea name="q12" placeholder="Anything at all — this is your chance..."></textarea>
         </div>
       </div>
@@ -275,7 +275,7 @@
     <div class="submit-section" id="submitSection">
       <p class="submit-note">Your answers will be sent to Jason before your review meeting.</p>
       <button type="submit" class="btn-submit" id="submitBtn">Submit my self assessment</button>
-      <div class="error-msg" id="errorMsg">Something went wrong. Please try again or speak to Jason directly.</div>
+      <div class="error-msg" id="errorMsg">Something went wrong. Please try again or speak to your manager directly.</div>
     </div>
 
     <div class="success-state" id="successState">
