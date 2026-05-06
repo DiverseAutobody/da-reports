@@ -339,9 +339,9 @@
     const fd = new FormData(this);
     fd.append('access_key', ACCESS_KEY);
     fd.append('subject', 'Diverse Autobody — Content Creator Self Assessment: ' + (fd.get('name') || 'Team Member'));
-    fd.append('to', 'dean@diverseautobody.com.au');
-
-    try {
+    fd.append('to', 'jason@diverseautobody.com.au');
+      fd.append('cc', 'dean@diverseautobody.com.au');
+      try {
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
       const data = await res.json();
       if (data.success) {

@@ -790,125 +790,135 @@
 </div>
 
 <script>
-  // Set today's date
   const d = new Date();
-  const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-  const dateField = document.getElementById('dateField');
-  if (dateField) dateField.value = dateStr;
+  document.getElementById('dateField').value = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
   const ackDate = document.getElementById('ackDate');
-  if (ackDate) ackDate.value = dateStr;
+  if (ackDate) ackDate.value = new Date().toLocaleDateString('en-AU');
 
-  // Live recipient display (feedback form)
-  const recipientEmail = document.getElementById('recipientEmail');
-  if (recipientEmail) {
-    recipientEmail.addEventListener('input', function() {
-      const display = document.getElementById('recipientDisplay');
-      if (display) display.textContent = this.value || 'the team member';
-    });
-  }
-
-  // Rating buttons (manager assessment)
-  document.querySelectorAll('.rating-row').forEach(row => {
-    row.querySelectorAll('.rating-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const fieldName = row.dataset.field;
-        row.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        const hidden = document.querySelector('input[name="' + fieldName + '"]');
-        if (hidden) hidden.value = btn.dataset.val;
-      });
-    });
+  document.getElementById('recipientEmail').addEventListener('input', function() {
+    document.getElementById('recipientDisplay').textContent = this.value || 'the team member';
   });
 
-  // Agree buttons (manager assessment)
-  document.querySelectorAll('.agree-btn').forEach(btn => {
+  document.querySelectorAll('.overall-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const fieldName = btn.dataset.field;
-      document.querySelectorAll('.agree-btn[data-field="' + fieldName + '"]').forEach(b => {
-        b.style.opacity = '0.6'; b.style.fontWeight = '500';
-      });
-      btn.style.opacity = '1'; btn.style.fontWeight = '700';
-      const hidden = document.querySelector('input[name="' + fieldName + '"]');
-      if (hidden) hidden.value = btn.dataset.val;
+      const f = btn.dataset.field;
+      document.querySelectorAll('.overall-btn[data-field="' + f + '"]').forEach(b => { b.style.opacity='0.45'; b.style.fontWeight='500'; });
+      btn.style.opacity='1'; btn.style.fontWeight='700';
+      document.querySelector('input[name="' + f + '"]').value = btn.dataset.val;
     });
   });
 
-  // Outcome buttons
-  document.querySelectorAll('.outcome-btn, .overall-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const fieldName = btn.dataset.field;
-      document.querySelectorAll('[data-field="' + fieldName + '"]').forEach(b => {
-        b.style.opacity = '0.45'; b.style.fontWeight = '500';
-      });
-      btn.style.opacity = '1'; btn.style.fontWeight = '700';
-      const hidden = document.querySelector('input[name="' + fieldName + '"]');
-      if (hidden) hidden.value = btn.dataset.val;
-    });
-  });
-
-  // Next step buttons
   document.querySelectorAll('.next-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const fieldName = btn.dataset.field;
-      document.querySelectorAll('.next-btn[data-field="' + fieldName + '"]').forEach(b => b.classList.remove('selected'));
+      const f = btn.dataset.field;
+      document.querySelectorAll('.next-btn[data-field="' + f + '"]').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      const hidden = document.querySelector('input[name="' + fieldName + '"]');
-      if (hidden) hidden.value = btn.dataset.val;
+      document.querySelector('input[name="' + f + '"]').value = btn.dataset.val;
     });
   });
 
-  // Web3Forms submission
   const ACCESS_KEY = '9322da94-7969-4a31-a433-ee5f25592c06';
 
-  const theForm = document.getElementById('feedbackForm');
-  if (theForm) {
-    theForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      const errMsg = document.getElementById('errorMsg');
-      if (errMsg) errMsg.style.display = 'none';
-      btn.disabled = true;
-      const originalText = btn.textContent;
-      btn.textContent = 'Sending...';
-
-      const fd = new FormData(this);
-      fd.append('access_key', ACCESS_KEY);
-      fd.append('subject', 'Diverse Autobody — Painter Feedback');
-
-      // For feedback form — use typed recipient email as primary
-      const recipInput = document.getElementById('recipientEmail');
-      if (recipInput && recipInput.value) {
-        fd.set('to', recipInput.value);
-        fd.append('cc', 'jason@diverseautobody.com.au');
-        fd.append('bcc', 'dean@diverseautobody.com.au');
-      } else {
-        fd.append('to', 'dean@diverseautobody.com.au');
-        fd.append('cc', 'jason@diverseautobody.com.au');
-      }
-
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: fd
-        });
-        const data = await res.json();
-        if (data.success) {
-          const submitSection = document.getElementById('submitSection');
-          const successState = document.getElementById('successState');
-          if (submitSection) submitSection.style.display = 'none';
-          if (successState) successState.style.display = 'block';
-          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        } else {
-          throw new Error(data.message);
-        }
-      } catch(err) {
-        console.error(err);
-        btn.disabled = false;
-        btn.textContent = originalText;
-        if (errMsg) errMsg.style.display = 'block';
-      }
-    });
+  async function submitToWeb3Forms(payload) {
+    const fd = new FormData();
+    for (const [key, val] of Object.entries(payload)) {
+      fd.append(key, val);
+    }
+    const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+    return await res.json();
   }
+
+  document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.style.display = 'none';
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending...';
+
+    const fd = new FormData(this);
+    const recipientEmail = document.getElementById('recipientEmail').value;
+    const teamMemberName = document.getElementById('teamMemberName').value;
+    const reviewPeriod = fd.get('review_period') || '';
+    const meetingDate = fd.get('meeting_date') || '';
+    const managerName = fd.get('manager_name') || '';
+    const nextReviewDate = fd.get('next_review_date') || '';
+
+    // Build clean readable field values
+    const fields = {
+      'Team Member': teamMemberName,
+      'Review Period': reviewPeriod,
+      'Meeting Date': meetingDate,
+      'Manager': managerName,
+      'Next Review Date': nextReviewDate,
+      'Boothloads per day — Rating': fd.get('kpi_r_boothloads') ? fd.get('kpi_r_boothloads') + '/5' : 'Not rated',
+      'Boothloads per day — Comments': fd.get('kpi_c_boothloads') || 'No comment',
+      'Paint quality — Rating': fd.get('kpi_r_quality') ? fd.get('kpi_r_quality') + '/5' : 'Not rated',
+      'Paint quality — Comments': fd.get('kpi_c_quality') || 'No comment',
+      'Prep quality — Rating': fd.get('kpi_r_prep') ? fd.get('kpi_r_prep') + '/5' : 'Not rated',
+      'Prep quality — Comments': fd.get('kpi_c_prep') || 'No comment',
+      'Rework rate — Rating': fd.get('kpi_r_rework') ? fd.get('kpi_r_rework') + '/5' : 'Not rated',
+      'Rework rate — Comments': fd.get('kpi_c_rework') || 'No comment',
+      'Speed and efficiency — Rating': fd.get('kpi_r_speed') ? fd.get('kpi_r_speed') + '/5' : 'Not rated',
+      'Speed and efficiency — Comments': fd.get('kpi_c_speed') || 'No comment',
+      'What you are doing well': fd.get('feedback_strengths') || '',
+      'Where you need to improve': fd.get('feedback_gaps') || '',
+      'What we need from you going forward': fd.get('feedback_expectations') || '',
+      'Goal 1': fd.get('goal_1') || '',
+      'Goal 2': fd.get('goal_2') || '',
+      'Goal 3': fd.get('goal_3') || 'Not set',
+      'Business commitments': fd.get('business_commitments') || 'None',
+      'Overall assessment': fd.get('outcome') || '',
+      'What happens next': fd.get('next_step') || '',
+      'Additional notes': fd.get('additional_notes') || 'None',
+    };
+
+    // Build email body
+    let body = 'DIVERSE AUTOBODY — PAINTER PERFORMANCE FEEDBACK\n';
+    body += '================================================\n\n';
+    for (const [label, val] of Object.entries(fields)) {
+      body += label + ':\n' + val + '\n\n';
+    }
+
+    try {
+      // Submission 1 — to team member
+      const teamPayload = {
+        access_key: ACCESS_KEY,
+        subject: 'Diverse Autobody — Your Performance Feedback: ' + reviewPeriod,
+        to: recipientEmail,
+        from_name: 'Diverse Autobody',
+        message: body,
+      };
+      const r1 = await submitToWeb3Forms(teamPayload);
+
+      // Submission 2 — record to jason + dean
+      const recordPayload = {
+        access_key: ACCESS_KEY,
+        subject: 'Diverse Autobody — Painter Feedback Submitted: ' + teamMemberName,
+        to: 'jason@diverseautobody.com.au',
+        cc: 'dean@diverseautobody.com.au',
+        from_name: managerName || 'Manager',
+        message: body,
+      };
+      const r2 = await submitToWeb3Forms(recordPayload);
+
+      if (r1.success || r2.success) {
+        document.getElementById('submitSection').style.display = 'none';
+        document.getElementById('successState').style.display = 'block';
+        document.getElementById('successMsg').textContent =
+          'The feedback has been sent to ' + teamMemberName + ' and recorded to Jason and Dean.';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch(err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = originalText;
+      errMsg.style.display = 'block';
+    }
+  });
 </script>
 </body>
 </html>

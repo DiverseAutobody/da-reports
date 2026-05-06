@@ -341,25 +341,30 @@
 
   document.querySelectorAll('.overall-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const fieldName = btn.dataset.field;
-      document.querySelectorAll('.overall-btn[data-field="' + fieldName + '"]').forEach(b => {
-        b.style.opacity = '0.45'; b.style.fontWeight = '500';
-      });
-      btn.style.opacity = '1'; btn.style.fontWeight = '700';
-      document.querySelector('input[name="' + fieldName + '"]').value = btn.dataset.val;
+      const f = btn.dataset.field;
+      document.querySelectorAll('.overall-btn[data-field="' + f + '"]').forEach(b => { b.style.opacity='0.45'; b.style.fontWeight='500'; });
+      btn.style.opacity='1'; btn.style.fontWeight='700';
+      document.querySelector('input[name="' + f + '"]').value = btn.dataset.val;
     });
   });
 
   document.querySelectorAll('.next-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const fieldName = btn.dataset.field;
-      document.querySelectorAll('.next-btn[data-field="' + fieldName + '"]').forEach(b => b.classList.remove('selected'));
+      const f = btn.dataset.field;
+      document.querySelectorAll('.next-btn[data-field="' + f + '"]').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      document.querySelector('input[name="' + fieldName + '"]').value = btn.dataset.val;
+      document.querySelector('input[name="' + f + '"]').value = btn.dataset.val;
     });
   });
 
   const ACCESS_KEY = '9322da94-7969-4a31-a433-ee5f25592c06';
+
+  async function submitToWeb3Forms(payload) {
+    const fd = new FormData();
+    for (const [key, val] of Object.entries(payload)) fd.append(key, val);
+    const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+    return await res.json();
+  }
 
   document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -373,22 +378,69 @@
     const fd = new FormData(this);
     const recipientEmail = document.getElementById('recipientEmail').value;
     const teamMemberName = document.getElementById('teamMemberName').value;
+    const reviewPeriod = fd.get('review_period') || '';
+    const meetingDate = fd.get('meeting_date') || '';
+    const managerName = fd.get('manager_name') || '';
+    const nextReviewDate = fd.get('next_review_date') || '';
 
-    fd.append('access_key', ACCESS_KEY);
-    fd.append('subject', 'Diverse Autobody — Content Creator Performance Feedback: ' + teamMemberName);
-    fd.append('to', recipientEmail);
-    fd.append('bcc', 'dean@diverseautobody.com.au');
+    const fields = {
+      'Team Member': teamMemberName,
+      'Review Period': reviewPeriod,
+      'Meeting Date': meetingDate,
+      'Manager': managerName,
+      'Next Review Date': nextReviewDate,
+      'Daily output — Rating': fd.get('kpi_r_output') ? fd.get('kpi_r_output') + '/5' : 'Not rated',
+      'Content quality — Rating': fd.get('kpi_r_quality') ? fd.get('kpi_r_quality') + '/5' : 'Not rated',
+      'Initiative — Rating': fd.get('kpi_r_initiative') ? fd.get('kpi_r_initiative') + '/5' : 'Not rated',
+      'Turnaround time — Rating': fd.get('kpi_r_turnaround') ? fd.get('kpi_r_turnaround') + '/5' : 'Not rated',
+      'Reliability and presence — Rating': fd.get('kpi_r_reliability') ? fd.get('kpi_r_reliability') + '/5' : 'Not rated',
+      'Daily output — Comments': fd.get('kpi_c_output') || 'No comment',
+      'Content quality — Comments': fd.get('kpi_c_quality') || 'No comment',
+      'Initiative — Comments': fd.get('kpi_c_initiative') || 'No comment',
+      'Turnaround time — Comments': fd.get('kpi_c_turnaround') || 'No comment',
+      'Reliability and presence — Comments': fd.get('kpi_c_reliability') || 'No comment',
+      'What you are doing well': fd.get('feedback_strengths') || '',
+      'Where you need to improve': fd.get('feedback_gaps') || '',
+      'What we need from you going forward': fd.get('feedback_expectations') || '',
+      'Goal 1': fd.get('goal_1') || '',
+      'Goal 2': fd.get('goal_2') || '',
+      'Goal 3': fd.get('goal_3') || 'Not set',
+      'Business commitments': fd.get('business_commitments') || 'None',
+      'Overall assessment': fd.get('outcome') || '',
+      'What happens next': fd.get('next_step') || '',
+      'Additional notes': fd.get('additional_notes') || 'None',
+    };
+
+    let body = 'DIVERSE AUTOBODY — CONTENT CREATOR PERFORMANCE FEEDBACK\n================================================\n\n';
+    for (const [label, val] of Object.entries(fields)) {
+      body += label + ':\n' + val + '\n\n';
+    }
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (data.success) {
+      const r1 = await submitToWeb3Forms({
+        access_key: ACCESS_KEY,
+        subject: 'Diverse Autobody — Your Performance Feedback',
+        to: recipientEmail,
+        from_name: 'Diverse Autobody',
+        message: body,
+      });
+
+      const r2 = await submitToWeb3Forms({
+        access_key: ACCESS_KEY,
+        subject: 'Diverse Autobody — Content Creator Feedback Submitted: ' + teamMemberName,
+        to: 'jason@diverseautobody.com.au',
+        cc: 'dean@diverseautobody.com.au',
+        from_name: managerName || 'Manager',
+        message: body,
+      });
+
+      if (r1.success || r2.success) {
         document.getElementById('submitSection').style.display = 'none';
         document.getElementById('successState').style.display = 'block';
         document.getElementById('successMsg').textContent =
-          'The feedback has been sent to ' + teamMemberName + ' at ' + recipientEmail + ' and recorded.';
+          'The feedback has been sent to ' + teamMemberName + ' and recorded to Jason and Dean.';
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      } else { throw new Error(data.message); }
+      } else { throw new Error('Submission failed'); }
     } catch(err) {
       btn.disabled = false;
       btn.textContent = originalText;
